@@ -2,20 +2,25 @@ package me.plugintest;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    private static String title;
-    private static String subTitle;
-    private static Integer time;
+    private String title;
+    private String subTitle;
+    private Integer time;
+    private static Main instance;
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
-        getServer().getPluginManager().registerEvents(new Events(this), this);
+        getServer().getPluginManager().registerEvents(new Events(), this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "test:channel");
     }
 
     @Override
@@ -35,14 +40,21 @@ public final class Main extends JavaPlugin {
         time = getPlugin(Main.class).getConfig().getInt("title.time");
         return time;
     }
+    public static Main getInstance() {
+        return instance;
+    }
 
     public void sendToProxy(Player p, String title) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("PlayerJoined");
-        out.writeUTF(p.getName());
-        out.writeUTF(title);
-
-        p.sendPluginMessage(this, "BungeeCord", out.toByteArray());
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("PlayerJoined");
+                out.writeUTF(p.getName());
+                out.writeUTF(title);
+                p.getServer().sendPluginMessage(instance,"BungeeCord", out.toByteArray());
+            }
+        },20*5);
     }
 
 }

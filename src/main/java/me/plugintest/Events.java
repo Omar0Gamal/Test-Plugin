@@ -1,21 +1,18 @@
 package me.plugintest;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class Events implements Listener {
 
-    private Main main ;
-    public Events(Main main){
-        this.main = main;
-    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
-        e.getPlayer().sendTitle(main.getTitle(), main.getSubTitle(),1,main.getTime(),1);
-        main.sendToProxy(e.getPlayer(),main.getTitle());
+        e.getPlayer().sendTitle(Main.getInstance().getTitle(), Main.getInstance().getSubTitle(),1,Main.getInstance().getTime(),1);
+        Main.getInstance().sendToProxy(e.getPlayer(),Main.getInstance().getTitle());
     }
 
 }
