@@ -11,7 +11,6 @@ public final class Main extends JavaPlugin {
 
     private String title;
     private String subTitle;
-    private Integer time;
     private static Main instance;
 
     @Override
@@ -20,7 +19,6 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new Events(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "test:channel");
     }
 
     @Override
@@ -35,10 +33,6 @@ public final class Main extends JavaPlugin {
     public String getSubTitle(){
         subTitle = ChatColor.translateAlternateColorCodes('&',getPlugin(Main.class).getConfig().getString("title.subtitle"));
         return subTitle;
-    }
-    public int getTime(){
-        time = getPlugin(Main.class).getConfig().getInt("title.time");
-        return time;
     }
     public static Main getInstance() {
         return instance;
